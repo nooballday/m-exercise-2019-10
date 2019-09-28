@@ -11,5 +11,8 @@
     "@babel/cli": "^7.6.2",
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2"
+  },
+  "dependencies": {
+    "moment": "^2.24.0"
   }
 }

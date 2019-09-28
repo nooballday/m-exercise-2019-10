@@ -32,16 +32,7 @@ class Graph {
     }
 
     getOptimalPath(start) {
-        const currentVertex = this.vertices.find(vertex => vertex.name == start)
-        this.optimumWeigth = this.optimumWeigth + currentVertex.weigth
-        if (currentVertex.edges.length == 0) {
-            this.optimumWeigthAll.push(this.optimumWeigth)
-            this.optimumWeigth = this.optimumWeigth - currentVertex.weigth
-        }
-        currentVertex.edges.forEach(vertex => {
-            this.getOptimalPath(vertex)
-        })
-        return this.optimumWeigthAll.sort((a, b) => b - a)[0]
+        
     }
 
     print() {

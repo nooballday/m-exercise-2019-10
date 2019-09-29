@@ -26,10 +26,11 @@ class Discount {
 }
 
 class Item {
-    constructor(name, price, type) {
+    constructor(name, price, type, quantity = 0) {
         this.name = name
         this.price = price
         this.type = type
+        this.quantity = quantity
     }
 }
 
@@ -42,9 +43,27 @@ class Transaction {
         this.initiateUserDiscount()
     }
 
+    /**
+     * time complexity for addItemFunction
+     * would be o(n) with n being how many percentage discount available
+     */
     addItem(item) {
-        this.items.push(item)
-        this.totalAmount += item.price
+        if (this.discounts.length === 0) {
+            this.items.push(item)
+        } else {
+            this.discounts.forEach(discount => {
+                if (discount.condition) {
+                    if (discount.type === 0) this.items.push(item)
+                    // only discount if anything but groceries
+                    if (discount.type === 1 && item.type !== 'groceries') {
+                        item.price = item.price -= (item.price * discount.value / 100)
+                        this.items.push(item)
+                    } else {
+                        this.items.push(item)
+                    }
+                }
+            })
+        }
     }
 
     initiateUserDiscount() {
@@ -53,8 +72,18 @@ class Transaction {
         this.addPercentageDiscount('Affiliation User', this.user.isAffiliation, 10)
     }
 
+    /**
+     * add percentage discount's time complexity
+     * would be similar to addItem which is o(n)
+     * where the n is how many discount applied for the current transaction
+     * 
+     * add percentage make sure that there is no duplicate discount
+     * being applied
+     */
     addPercentageDiscount(name, condition, value) {
         if (!condition) return
+        // check if there is any discount so that
+        // we can check for duplicate percentage discounts
         if (this.discounts.length > 0) {
             this.discounts.forEach((v, i) => {
                 if (v.type == 1 && v.value < value) {
@@ -68,23 +97,20 @@ class Transaction {
         }
     }
 
-    calculateDiscount() {
+    calculateBasicDiscount(totalAmount) {
         const basicDiscount = parseInt(this.totalAmount / 100)
-        if (basicDiscount > 0) this.discounts.push(new Discount('Basic Discount', true, 0, basicDiscount * 5))
-        this.discounts.forEach(discount => {
-            if (discount.condition) {
-                if (discount.type === 0) this.totalAmount -= discount.value
-                if (discount.type === 1) this.totalAmount -= (this.totalAmount * discount.value / 100)
-            }
-        })
+        if (basicDiscount > 0) return totalAmount - (basicDiscount * 5)
     }
 
-    printDiscount() {
-        this.discounts.forEach(v => console.log(`You got ${v.name}`))
-    }
-
+    /**
+     * time complexity for total amount is
+     * o(n) where n is how many items being calculated
+     */
     getTotalAmount() {
-        return this.totalAmount
+        this.items.forEach(item => {
+            this.totalAmount += item.price * item.quantity
+        })
+        return this.calculateBasicDiscount(this.totalAmount)
     }
 }
 

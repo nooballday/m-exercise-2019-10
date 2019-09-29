@@ -38,6 +38,10 @@ class Graph {
     print() {
         console.log('vertices : ', JSON.stringify(this.vertices))
     }
+
+    topologicalSort(){
+        
+    }
 }
 
 

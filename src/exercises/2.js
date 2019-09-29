@@ -32,15 +32,21 @@ class Graph {
     }
 
     getOptimalPath(start) {
-        
+
     }
 
     print() {
         console.log('vertices : ', JSON.stringify(this.vertices))
     }
 
-    topologicalSort(){
-        
+    topologicalSortHelper(v, visited, stack) {
+        // visited[v] = true
+        // let i
+        // const it = 
+    }
+
+    topologicalSort() {
+
     }
 }
 
